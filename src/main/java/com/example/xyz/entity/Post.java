@@ -18,6 +18,9 @@ public class Post {
     private int nbrOfViews;
 
     @OneToMany(mappedBy="post")
-    List<PostComment> comments;
+    private List<PostComment> comments;
+
+    @ManyToOne()
+    private User author;
 
 }

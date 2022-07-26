@@ -20,4 +20,7 @@ public class PostComment {
     @OneToOne
     @JoinColumn(name="postComment_id", nullable=false)
     private PostComment postComment;
+
+    @ManyToOne()
+    private User author;
 }
