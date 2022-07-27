@@ -24,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +69,8 @@ public class AuthController {
 
             String jwt = jwtTokenUtil.generateJwtToken(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user.setLastLogin(LocalDateTime.now());
+            userRepository.save(user);
 
             return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), userDetails.getAuthorities()));
         }else {
@@ -141,15 +145,7 @@ public class AuthController {
         return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> GetUser() {
-        List<User> listuser = null;
-        listuser = userRepository.findAll();
-        if (listuser.isEmpty())
-            return ResponseEntity.noContent().build();
 
-        return new ResponseEntity<>(listuser, HttpStatus.OK);
-    }
 
     @GetMapping("/{username}")
     public ResponseEntity<List<User>> enableAccountUser(@PathVariable String username) {
