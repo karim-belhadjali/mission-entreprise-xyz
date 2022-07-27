@@ -16,4 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT * from Post p where p.title like %:keyword% OR p.content like %:keyword%", nativeQuery = true)
     public List<Post> search(Pageable pageable, @Param("keyword") String keyword);
+
 }

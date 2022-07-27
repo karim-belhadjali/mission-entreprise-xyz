@@ -1,5 +1,9 @@
 package com.example.xyz.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,9 +90,11 @@ public class PostService {
         return postRepository.search(pageable, keyword);
     }
 
-    /*@GetMapping("/posts/feeds")
-    public List<Post> getFeeds(@PathVariable int page, @PathVariable int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        //return postRepository.findFeed(pageable);
-    }*/
+    @GetMapping("/posts/feeds")
+    public List<Post> getFeeds() {
+    	List list = postRepository.findAll();
+    	Comparator<Post> combinedComparator = Comparator.comparing(Post::getNbrOfViews).thenComparing(Post::getNbrOfStars);
+        Collections.sort(list,combinedComparator.reversed());
+        return list;
+    }
 }
