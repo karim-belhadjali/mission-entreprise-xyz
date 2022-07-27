@@ -1,49 +1,13 @@
-package com.example.xyz.entity;
+package com.example.xyz.security.jwt.request;
 
-import com.example.xyz.enums.RoleName;
-import org.hibernate.annotations.NaturalId;
-
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "username"
-        }),
-        @UniqueConstraint(columnNames = {
-                "mail"
-        })
-})
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
-
-    @NaturalId
-    @NotBlank
-    @Size(max = 50)
-    @Email
-    private String mail;
-
-    @NotBlank
-    @Size(min = 6, max = 100)
-    private String password;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
+public class SignUpForm {
 
     private String firstName;
 
     private String lastName;
-
 
     private String username;
 
@@ -51,42 +15,26 @@ public class User {
 
     private Long matricule;
 
-
     private boolean actif;
-
 
     private String profilePicture;
 
     private Date startingDate;
 
-
     private String typeContract;
 
+    private String mail;
 
-    public User() {
+    private Set<String> role;
+
+    private String password;
+
+    public Set<String> getRole() {
+        return this.role;
     }
 
-    public User(String firstName, String lastName, String username, String mail, String password, Date birthday,
-                Long matricule, boolean actif, String profilePicture, Date startingDate, String typeContract) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.mail = mail;
-        this.password = password;
-        this.birthday = birthday;
-        this.matricule = matricule;
-        this.actif = actif;
-        this.profilePicture = profilePicture;
-        this.startingDate = startingDate;
-        this.typeContract = typeContract;
-    }
-
-    public Long getId() {
-        return userId;
-    }
-
-    public void setId(Long userId) {
-        this.userId = userId;
+    public void setRole(Set<String> role) {
+        this.role = role;
     }
 
     public String getUsername() {
@@ -129,14 +77,6 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
     public Date getBirthday() {
         return birthday;
     }
@@ -176,7 +116,6 @@ public class User {
     public void setStartingDate(Date startingDate) {
         this.startingDate = startingDate;
     }
-
 
     public String getTypeContract() {
         return typeContract;
