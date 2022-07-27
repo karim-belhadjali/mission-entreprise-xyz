@@ -3,18 +3,17 @@ package com.example.xyz.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.stereotype.Repository;
 import com.example.xyz.entity.Post;
 
+@Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    public List<Post> findByAuthor_id(Long userId);
 
-    @Query("SELETCT * from Post where p.title like %:name% OR p.content like %:name%")
-    public List<Post> findByKeyword(Pageable pageable, @Param("keyword") String keyword);
+    public List<Post> findByAuthor_userId(Long userId);
 
-    @Query("SELETCT * from Post ORDER BY nbrOfStars desc UNION SELETCT * from Post ORDER BY nbrOfViews desc")
-    public List<Post> findFeed(Pageable pageable);
+    @Query(value = "SELECT * from Post p where p.title like %:keyword% OR p.content like %:keyword%", nativeQuery = true)
+    public List<Post> search(Pageable pageable, @Param("keyword") String keyword);
 }

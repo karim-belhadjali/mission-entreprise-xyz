@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.xyz.entity.Post;
 import com.example.xyz.entity.PostComment;
+import com.example.xyz.entity.User;
+import com.example.xyz.repositories.UserRepository;
 import com.example.xyz.repository.PostCommentRepository;
 
 @RestController
@@ -21,10 +26,22 @@ import com.example.xyz.repository.PostCommentRepository;
 public class PostCommentService {
 	@Autowired
 	private PostCommentRepository postCommentRepository;
+	
+	@Autowired
+    private UserRepository userRepository;
 
 	@PostMapping("/postcomments")
-    public PostComment createPost(@RequestBody PostComment post) {
-        return postCommentRepository.save(post);
+    public PostComment createPost(@RequestBody PostComment postComment) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	Optional<User> oAuthor = userRepository.findByUsername(userDetails.getUsername());
+    	if(oAuthor.isPresent()) {
+    		User author =oAuthor.get();
+    		postComment.setAuthor(author);
+    		PostComment savedPostComment = postCommentRepository.save(postComment);
+    		savedPostComment.setAuthor(null);
+    		return savedPostComment;
+    	}
+    	return new PostComment();
     }
 
     @PutMapping("/postcomments")
