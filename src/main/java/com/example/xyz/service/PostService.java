@@ -104,7 +104,6 @@ public class PostService {
     	Optional<Post> oPost = postRepository.findById(id);
     	if(oPost.isPresent()) {
     		Post post = oPost.get();
-    		System.out.print(post);
     		int nbStars = post.getNbrOfStars()+1;
     		post.setNbrOfStars(nbStars);
     		return postRepository.save(post);

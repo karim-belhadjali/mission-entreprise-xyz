@@ -37,9 +37,7 @@ public class PostCommentService {
     	if(oAuthor.isPresent()) {
     		User author =oAuthor.get();
     		postComment.setAuthor(author);
-    		PostComment savedPostComment = postCommentRepository.save(postComment);
-    		savedPostComment.setAuthor(null);
-    		return savedPostComment;
+    		return postCommentRepository.save(postComment);
     	}
     	return new PostComment();
     }
