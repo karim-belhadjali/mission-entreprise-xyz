@@ -25,14 +25,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @NaturalId
-    @NotBlank
-    @Size(max = 50)
-    @Email
+//    @NaturalId
+//    @NotBlank
+//    @Size(max = 50)
+//    @Email
     private String mail;
 
-    @NotBlank
-    @Size(min = 6, max = 100)
+//    @NotBlank
+//    @Size(min = 6, max = 100)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -64,6 +64,10 @@ public class User {
 
 
     public User() {
+    }
+
+    public User(final Long userId) {
+        this.userId = userId;
     }
 
     public User(String firstName, String lastName, String username, String mail, String password, Date birthday,

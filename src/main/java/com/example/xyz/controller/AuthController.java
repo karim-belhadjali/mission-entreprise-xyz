@@ -3,7 +3,7 @@ package com.example.xyz.controller;
 import com.example.xyz.entity.Role;
 import com.example.xyz.entity.User;
 import com.example.xyz.enums.RoleName;
-import com.example.xyz.messagerie.service.EmailService;
+//import com.example.xyz.messagerie.service.EmailService;
 import com.example.xyz.repositories.RoleRepository;
 import com.example.xyz.repositories.UserRepository;
 import com.example.xyz.security.JwtTokenUtil;
@@ -52,8 +52,8 @@ public class AuthController {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    public EmailService emailService;
+//    @Autowired
+//    public EmailService emailService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> signInUser(@Valid @RequestBody LoginForm loginRequest) {
@@ -136,7 +136,7 @@ public class AuthController {
 
         user.setRoles(roles);
         userRepository.save(user);
-        emailService.sendSimpleEmail(user.getMail(),"New User Profile Creation","your account has been created please use this link to complete your profile http://localhost:8989/auth/"+user.getUsername());
+//        emailService.sendSimpleEmail(user.getMail(),"New User Profile Creation","your account has been created please use this link to complete your profile http://localhost:8989/auth/"+user.getUsername());
 
         return new ResponseEntity<>(new ResponseMessage("User registered successfully!"), HttpStatus.OK);
     }
