@@ -1,5 +1,6 @@
-package com.example.xyz.entity;
+package com.example.xyz.entity.event_mgmt;
 
+import com.example.xyz.entity.User;
 import com.example.xyz.enums.EventInviteStatus;
 import lombok.Data;
 
@@ -24,10 +25,18 @@ public class EventInvite {
 	private Date timestamp;
 
 	@ManyToOne
-	@JoinColumn(name="sent_by")
+	@JoinColumn(name = "sent_by_id")
 	private User sentBy;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "event_invites_receivers",
+			joinColumns = @JoinColumn(name = "event_invite_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
 	private List<User> receivedBy;
 
+	@ManyToOne
+	@JoinColumn(name = "event_id")
+	private Event event;
 }
