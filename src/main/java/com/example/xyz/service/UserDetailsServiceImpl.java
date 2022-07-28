@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public void deleteByUsername(String username) throws ChangeSetPersister.NotFoundException {
         Optional<User> userOpt = userRepository.findByUsername(username);
-        if (userOpt.isEmpty()) {
+        if (userOpt.isPresent()) {
             throw new ChangeSetPersister.NotFoundException();
         }
         userRepository.deleteByUsername(username);
@@ -49,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public User updateUser(SignUpForm userToUpdate) throws ChangeSetPersister.NotFoundException {
         Optional<User> databaseUser = userRepository.findByUsername(userToUpdate.getUsername());
-        if (databaseUser.isEmpty()) {
+        if (databaseUser.isPresent()) {
             throw new ChangeSetPersister.NotFoundException();
         }
         User user = databaseUser.get();
