@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.example.xyz.entity.Collaboration;
 import com.example.xyz.entity.Offer;
 import com.example.xyz.entity.User;
+import com.example.xyz.enums.OfferType;
 import com.example.xyz.repositories.UserRepository;
 import com.example.xyz.repository.CollaborationRepository;
 import com.example.xyz.repository.OfferRepository;
@@ -31,7 +32,7 @@ public class OfferService {
     @Autowired
     private CollaborationRepository collaborationRepository;
 
-    public ResponseEntity<?> createOffer(Offer offer, Long userId, Long collaborationId) {
+    public ResponseEntity<?> createOffer(Offer offer, Long collaborationId) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         Optional<User> oAuthor = userRepository.findByUsername(userDetails.getUsername());
@@ -45,6 +46,7 @@ public class OfferService {
             Collaboration collaboration = optional.get();
             offer.setCollaboration(collaboration);
         }
+        offer.setOfferType(OfferType.HAPPY_DAYS);
         offerRepository.save(offer);
         return ResponseEntity.ok("Offer created with Succes!");
     }

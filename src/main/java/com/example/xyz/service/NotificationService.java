@@ -88,7 +88,6 @@ public class NotificationService {
                             + notification.getUser().getFirstName() + notification.getUser().getLastName());
             notification.setNotificationStatus(NotificationStatus.RECEIVED);
             saveNotification(notification);
-            sendNotification(notification);
         } else if (notification.getNotificationStatus().equals(NotificationStatus.RECEIVED)) {
             emailService.sendSimpleEmail(notification.getUserToNotify().getMail(),
                     "the Notification " + notification.getName() + " " + notification.getNotificationType(),

@@ -38,39 +38,16 @@ public class OfferController {
 
     @Autowired
     private OfferService offerService;
-
     ModelMapper modelMapper;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private CollaborationRepository collaborationRepository;
-
-    @PostMapping("/addOffer/{userId}/{collaborationId}")
-    @RequestMapping(value = "/addOffer/{userId}/{collaborationId}", method = RequestMethod.POST, headers = "Accept=application/json", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE, produces = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
-
-    public ResponseEntity<?> addOffer(@Valid @RequestBody @ModelAttribute OfferDTO offerDTO,
-            @PathVariable long userId, @PathVariable long collaborationId) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        Optional<User> oAuthor = userRepository.findByUsername(userDetails.getUsername());
-        if (oAuthor.isPresent()) {
-            User author = oAuthor.get();
-            offerDTO.setUser(author);
-        }
-
-        Optional<Collaboration> optional = collaborationRepository.findById(collaborationId);
-        if (optional.isPresent()) {
-            Collaboration collaboration = optional.get();
-            offerDTO.setCollaboration(collaboration);
-        }
-        offerDTO.setOfferType(OfferType.HAPPY_DAYS);
+    @RequestMapping(value = "/addOffer/{collaborationId}", method = RequestMethod.POST)
+    public ResponseEntity<?> addOffer(@RequestBody @ModelAttribute OfferDTO offerDTO,
+            @PathVariable long collaborationId) {
         Offer offer = modelMapper.map(offerDTO, Offer.class);
         String FileName = offerDTO.getFilePath().getOriginalFilename();
         FileUtilities.saveArticleImage(FileName, offerDTO.getFilePath());
         offer.setFilePath("C:/images/offres/" + FileName);
-        return offerService.createOffer(offer, userId, collaborationId);
+        return offerService.createOffer(offer, collaborationId);
     }
 
     @GetMapping("/offers")

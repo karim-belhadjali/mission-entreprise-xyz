@@ -98,8 +98,7 @@ public class NotificationController {
     }
 
     @PutMapping("/updateNotificationStatus/{notification_Id}")
-    public ResponseEntity<Notification> pullNotification(@PathVariable long notification_Id,
-            @PathVariable NotificationStatus notificationStatus) {
+    public ResponseEntity<Notification> pullNotification(@PathVariable long notification_Id) {
 
         Optional<Notification> notificationData = notificationService.getNotificationById(notification_Id);
 
