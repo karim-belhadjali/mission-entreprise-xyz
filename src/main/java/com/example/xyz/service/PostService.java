@@ -67,8 +67,8 @@ public class PostService {
     	Optional<Post> oPost = postRepository.findById(id);
     	if(oPost.isPresent()) {
     		Post post = oPost.get();
-    		int nbViews = post.getNbrOfViews() +1 ;
-    		post.setNbrOfViews(nbViews);
+    		int nbViews = post.getNbrOfViews() ;
+    		post.setNbrOfViews(nbViews + 1);
     		return postRepository.save(post);
     	}
     	return null;
@@ -96,5 +96,19 @@ public class PostService {
     	Comparator<Post> combinedComparator = Comparator.comparing(Post::getNbrOfViews).thenComparing(Post::getNbrOfStars);
         Collections.sort(list,combinedComparator.reversed());
         return list;
+    }
+    
+    
+    @GetMapping("/posts/rateup/{id}")
+    public Post rateUp(@PathVariable Long id) {
+    	Optional<Post> oPost = postRepository.findById(id);
+    	if(oPost.isPresent()) {
+    		Post post = oPost.get();
+    		System.out.print(post);
+    		int nbStars = post.getNbrOfStars()+1;
+    		post.setNbrOfStars(nbStars);
+    		return postRepository.save(post);
+    	}
+    	return null;
     }
 }
