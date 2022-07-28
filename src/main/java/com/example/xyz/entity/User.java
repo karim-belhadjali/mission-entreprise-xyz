@@ -1,6 +1,8 @@
 package com.example.xyz.entity;
 
 import com.example.xyz.enums.RoleName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -35,8 +37,10 @@ public class User {
 
     @NotBlank
     @Size(min = 6, max = 100)
+    @JsonIgnore
     private String password;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
@@ -54,16 +58,19 @@ public class User {
     private Long matricule;
 
 
+    @JsonIgnore
     private boolean actif;
 
 
     private String profilePicture;
 
+    @JsonIgnore
     private Date startingDate;
 
     private LocalDateTime lastLogin;
 
 
+    @JsonIgnore
     private String typeContract;
 
 
