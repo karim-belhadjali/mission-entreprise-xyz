@@ -13,6 +13,7 @@ import com.example.xyz.entity.Notification;
 import com.example.xyz.entity.User;
 import com.example.xyz.enums.NotificationStatus;
 import com.example.xyz.enums.NotificationType;
+import com.example.xyz.messagerie.service.EmailService;
 import com.example.xyz.repositories.UserRepository;
 import com.example.xyz.repository.NotificationRepository;
 import java.util.List;
@@ -26,6 +27,9 @@ public class NotificationService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    public EmailService emailService;
 
     public List<Notification> findAll() {
         return notificationRepository.findAll();
@@ -46,14 +50,17 @@ public class NotificationService {
     }
 
     public Notification addNotification(Notification notification) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
         Optional<User> oAuthor = userRepository.findByUsername(userDetails.getUsername());
         if (oAuthor.isPresent()) {
             User author = oAuthor.get();
             notification.setUser(author);
         }
         notification.setNotificationStatus(NotificationStatus.CREATED);
-        return saveNotification(notification);
+        Notification newNotification = saveNotification(notification);
+        sendNotification(newNotification);
+        return newNotification;
     }
 
     public Optional<Notification> getNotificationById(Long id) {
@@ -69,6 +76,28 @@ public class NotificationService {
     public void deleteNotification(Notification notification) {
 
         notificationRepository.deleteById(notification.getId());
+
+    }
+
+    public void sendNotification(Notification notification) {
+
+        if (notification.getNotificationStatus().equals(NotificationStatus.CREATED)) {
+            emailService.sendSimpleEmail(notification.getUserToNotify().getMail(),
+                    "New Notification " + notification.getName() + " " + notification.getNotificationType(),
+                    "you have a new " + notification.getNotificationType() + " from "
+                            + notification.getUser().getFirstName() + notification.getUser().getLastName());
+            notification.setNotificationStatus(NotificationStatus.RECEIVED);
+            saveNotification(notification);
+            sendNotification(notification);
+        } else if (notification.getNotificationStatus().equals(NotificationStatus.RECEIVED)) {
+            emailService.sendSimpleEmail(notification.getUserToNotify().getMail(),
+                    "the Notification " + notification.getName() + " " + notification.getNotificationType(),
+                    "your Notification " + notification.getNotificationType() + " from "
+                            + notification.getUser().getFirstName() + notification.getUser().getLastName()
+                            + "Is recieved");
+            notification.setNotificationStatus(NotificationStatus.SENDED);
+            saveNotification(notification);
+        }
 
     }
 

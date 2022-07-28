@@ -22,7 +22,7 @@ public class Collaboration {
     @NotEmpty
     private String collaborator;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User user;
 }

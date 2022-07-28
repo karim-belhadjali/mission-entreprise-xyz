@@ -33,7 +33,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationStatus notificationStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User user;
 

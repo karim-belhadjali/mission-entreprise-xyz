@@ -105,11 +105,12 @@ public class NotificationController {
 
         if (notificationData.isPresent()) {
             Notification newNotification = notificationData.get();
-            newNotification.setNotificationStatus(notificationStatus);
-            return new ResponseEntity<>(notificationService.saveNotification(newNotification), HttpStatus.OK);
+            notificationService.sendNotification(newNotification);
+            return ResponseEntity.accepted().build();
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
+
 }

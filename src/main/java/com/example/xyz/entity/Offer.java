@@ -24,11 +24,11 @@ public class Offer {
     @Enumerated(EnumType.STRING)
     private OfferType offerType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "collaboration_id", nullable = false)
     private Collaboration collaboration;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User user;
 }

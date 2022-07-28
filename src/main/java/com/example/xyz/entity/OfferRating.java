@@ -17,11 +17,11 @@ public class OfferRating {
     @Range(min = 1, max = 5, message = "Rate must be between 1 to 5")
     private int rate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "offre_id")
     private Offer offre;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User user;
 

@@ -19,11 +19,11 @@ public class Publicite {
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "id_offre")
     private Offer offer;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne
     @JoinColumn(name = "creator_id")
     private User user;
 }

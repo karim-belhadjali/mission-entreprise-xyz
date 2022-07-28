@@ -9,8 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.example.xyz.entity.Collaboration;
 import com.example.xyz.entity.Offer;
+import com.example.xyz.entity.User;
+import com.example.xyz.repositories.UserRepository;
+import com.example.xyz.repository.CollaborationRepository;
 import com.example.xyz.repository.OfferRepository;
 
 @Service
@@ -18,8 +25,26 @@ public class OfferService {
     @Autowired
     private OfferRepository offerRepository;
 
-    public ResponseEntity<?> createOffer(Offer offer, Long userId) {
+    @Autowired
+    private UserRepository userRepository;
 
+    @Autowired
+    private CollaborationRepository collaborationRepository;
+
+    public ResponseEntity<?> createOffer(Offer offer, Long userId, Long collaborationId) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        Optional<User> oAuthor = userRepository.findByUsername(userDetails.getUsername());
+        if (oAuthor.isPresent()) {
+            User author = oAuthor.get();
+            offer.setUser(author);
+        }
+
+        Optional<Collaboration> optional = collaborationRepository.findById(collaborationId);
+        if (optional.isPresent()) {
+            Collaboration collaboration = optional.get();
+            offer.setCollaboration(collaboration);
+        }
         offerRepository.save(offer);
         return ResponseEntity.ok("Offer created with Succes!");
     }
